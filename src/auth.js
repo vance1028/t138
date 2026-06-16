@@ -10,9 +10,9 @@ const TOKEN_TTL = process.env.TOKEN_TTL || '8h';
 
 /** 校验账号密码，成功返回 { token, user }，失败返回 null。 */
 function login(username, password) {
-  const row = store.getUserByUsername(username);
+  const row = store.getUserWithPassword(username);
   if (!row || !row.active) return null;
-  if (!verifyPassword(password, row.password_hash)) return null;
+  if (!verifyPassword(password, row.passwordHash)) return null;
   const user = store.mapUser(row);
   const token = jwt.sign({ sub: user.id, username: user.username, role: user.role }, JWT_SECRET, {
     expiresIn: TOKEN_TTL,
